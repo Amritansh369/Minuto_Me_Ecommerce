@@ -1,23 +1,29 @@
 // Owner: M1 (everyone adds ONE line for their routes)
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const errorHandler = require('./middleware/errorHandler');
+import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import errorHandler from './middleware/errorHandler.js';
+import authRoutes from './routes/authRoutes.js';
+import storeRoutes from './routes/storeRoutes.js';
 
 const app = express();
+
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(cookieParser());
 
-app.get('/api/health', (req, res) => res.json({ ok: true }));
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ success: true });
+});
 
 // Routes -- uncomment as each member finishes theirs
-// app.use('/api/auth', require('./routes/authRoutes'));            // M1
-// app.use('/api/stores', require('./routes/storeRoutes'));         // M1
-// app.use('/api/products', require('./routes/productRoutes'));     // M4
-// app.use('/api/dashboard', require('./routes/dashboardRoutes'));  // M4
-// app.use('/api/orders', require('./routes/orderRoutes'));         // M5
-// app.use('/api/payments', require('./routes/paymentRoutes'));     // M5
+// M1
+app.use('/api/auth', authRoutes);
+app.use('/api/stores', storeRoutes);
+
+// Product, dashboard, order, and payment routes will be mounted by their owners.
 
 app.use(errorHandler);
-module.exports = app;
+export default app;
