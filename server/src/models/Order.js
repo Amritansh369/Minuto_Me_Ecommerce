@@ -1,5 +1,5 @@
 // Owner: M5
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const orderItemSchema = new mongoose.Schema(
   {
@@ -56,4 +56,4 @@ const orderSchema = new mongoose.Schema(
 
 orderSchema.index({ store: 1, createdAt: -1 });
 
-module.exports = mongoose.model('Order', orderSchema);
+export default mongoose.model('Order', orderSchema);

@@ -1,27 +1,49 @@
 // Owner: M1
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, trim: true },
-    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-    password: { type: String, required: true, minlength: 6, select: false },
-    role: { type: String, enum: ['client', 'customer', 'admin'], default: 'client' },
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 6,
+        select: false
+    },
+    role: {
+        type: String,
+        enum: ['client', 'customer', 'admin'],
+        default: 'client'
+    },
     // Set for role 'client' once their store is created (one store per client)
-    store: { type: mongoose.Schema.Types.ObjectId, ref: 'Store', default: null },
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Store',
+        default: null
+    },
   },
   { timestamps: true }
 );
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 userSchema.methods.matchPassword = function (plain) {
   return bcrypt.compare(plain, this.password);
 };
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

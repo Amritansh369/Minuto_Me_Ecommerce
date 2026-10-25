@@ -1,7 +1,7 @@
 // Owner: M1
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-module.exports = async function connectDB() {
+const connectDB = async() => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('MongoDB connected');
@@ -10,3 +10,5 @@ module.exports = async function connectDB() {
     process.exit(1);
   }
 };
+
+export default connectDB ;
