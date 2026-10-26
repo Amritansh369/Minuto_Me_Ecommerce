@@ -1,6 +1,8 @@
 // Owner: M1 (everyone adds ONE route line)
 import { Routes, Route } from 'react-router-dom';
 
+import Dashboard from './pages/dashboard';
+
 export default function App() {
   return (
     <Routes>
@@ -8,7 +10,7 @@ export default function App() {
       {/* <Route path="/login" element={<Login />} />                    M1 */}
       {/* <Route path="/create-store" element={<CreateStore />} />       M2 */}
       {/* <Route path="/store/:slug" element={<Home />} />               M3 */}
-      {/* <Route path="/dashboard" element={<DashboardHome />} />        M4 */}
+      <Route path="/dashboard/*" element={<Dashboard />} />
       {/* <Route path="/cart" element={<Cart />} />                      M5 */}
     </Routes>
   );
