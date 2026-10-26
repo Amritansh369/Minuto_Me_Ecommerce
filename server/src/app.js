@@ -14,8 +14,8 @@ app.get('/api/health', (req, res) => res.json({ ok: true }));
 // Routes -- uncomment as each member finishes theirs
 // app.use('/api/auth', require('./routes/authRoutes'));            // M1
 // app.use('/api/stores', require('./routes/storeRoutes'));         // M1
-// app.use('/api/products', require('./routes/productRoutes'));     // M4
-// app.use('/api/dashboard', require('./routes/dashboardRoutes'));  // M4
+app.use('/api/products', require('./routes/productRoutes'));     // M4
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));  // M4
 // app.use('/api/orders', require('./routes/orderRoutes'));         // M5
 // app.use('/api/payments', require('./routes/paymentRoutes'));     // M5
 
