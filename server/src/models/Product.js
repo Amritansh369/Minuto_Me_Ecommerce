@@ -1,5 +1,5 @@
 // Owner: M4  (read by M3 storefront and M5 cart/orders)
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
   {
@@ -20,4 +20,4 @@ const productSchema = new mongoose.Schema(
 
 productSchema.index({ store: 1, category: 1 });
 
-module.exports = mongoose.model('Product', productSchema);
+export default mongoose.model('Product', productSchema);
