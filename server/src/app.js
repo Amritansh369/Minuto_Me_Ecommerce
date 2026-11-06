@@ -16,8 +16,8 @@ app.get('/api/health', (req, res) => res.json({ ok: true }));
 // app.use('/api/stores', require('./routes/storeRoutes'));         // M1
 // app.use('/api/products', require('./routes/productRoutes'));     // M4
 // app.use('/api/dashboard', require('./routes/dashboardRoutes'));  // M4
-// app.use('/api/orders', require('./routes/orderRoutes'));         // M5
-// app.use('/api/payments', require('./routes/paymentRoutes'));     // M5
+app.use('/api/orders', require('./routes/orderRoutes'));            // M5
+app.use('/api/payments', require('./routes/paymentRoutes'));        // M5
 
 app.use(errorHandler);
 module.exports = app;
