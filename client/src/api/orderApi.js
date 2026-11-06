@@ -1,2 +1,46 @@
 // Owner: M5
-// TODO: implement
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api',
+  withCredentials: true,
+});
+
+// Turns an axios error into { message, status, issues } for the UI
+export const toApiError = (err) => ({
+  message: err.response?.data?.message || err.message || 'Something went wrong',
+  status: err.response?.status || 0,
+  issues: err.response?.data?.issues || [],
+});
+
+const call = async (request) => {
+  try {
+    const response = await request;
+    return response.data;
+  } catch (err) {
+    throw toApiError(err);
+  }
+};
+
+const toLines = (items) => items.map(({ productId, quantity }) => ({ productId, quantity }));
+
+// Storefront / customer
+export const quoteCart = (storeSlug, items) =>
+  call(api.post('/orders/quote', { storeSlug, items: toLines(items) }));
+
+export const createOrder = (storeSlug, items, details) =>
+  call(api.post('/orders', { storeSlug, items: toLines(items), ...details }));
+
+export const trackOrder = (orderId, email) =>
+  call(api.get(`/orders/track/${orderId}`, { params: { email } }));
+
+export const fetchMyOrders = (storeSlug) => call(api.get('/orders/my', { params: { storeSlug } }));
+
+export const simulatePayment = (orderId, email) =>
+  call(api.post(`/payments/${orderId}/simulate`, { email }));
+
+// Store owner (for the dashboard)
+export const fetchStoreOrders = (params = {}) => call(api.get('/orders/store', { params }));
+
+export const updateOrderStatus = (orderId, status) =>
+  call(api.patch(`/orders/${orderId}/status`, { status }));
