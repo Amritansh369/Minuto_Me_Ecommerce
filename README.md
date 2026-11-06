@@ -17,4 +17,4 @@ npm run dev
 | M4 | Admin dashboard & products |
 | M5 | Cart, checkout & orders |
 
-Branches: `main` (stable) <- `develop` <- `feature/m<N>-<name>`. PRs only.
+Branches: `main` (stable) <- `feature/m<N>-<name>`. PRs only.
