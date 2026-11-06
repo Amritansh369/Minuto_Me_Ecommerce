@@ -1,10 +1,10 @@
 // Owner: M5
-const mongoose = require('mongoose');
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const Store = require('../models/Store');
-const { priceCart, findActiveStore, storeSummary, httpError } = require('./cartController');
-const { createOrderSchema, updateStatusSchema, parse } = require('../validators/orderValidator');
+import mongoose from 'mongoose';
+import Order from '../models/Order.js';
+import Product from '../models/Product.js';
+import Store from '../models/Store.js';
+import { priceCart, findActiveStore, storeSummary, httpError } from './cartController.js';
+import { createOrderSchema, updateStatusSchema, parse } from '../validators/orderValidator.js';
 
 // Allowed status changes for store owners
 const transitions = {
@@ -170,4 +170,4 @@ const updateOrderStatus = async (req, res, next) => {
   }
 };
 
-module.exports = { createOrder, trackOrder, getMyOrders, getStoreOrders, updateOrderStatus };
+export { createOrder, trackOrder, getMyOrders, getStoreOrders, updateOrderStatus };

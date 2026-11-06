@@ -6,6 +6,10 @@ import morgan from 'morgan';
 import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import storeRoutes from './routes/storeRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 const app = express();
 
@@ -18,12 +22,13 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true });
 });
 
-// Routes -- uncomment as each member finishes theirs
-// M1
-app.use('/api/auth', authRoutes);
-app.use('/api/stores', storeRoutes);
-
-// Product, dashboard, order, and payment routes will be mounted by their owners.
+// Routes
+app.use('/api/auth', authRoutes);           // M1
+app.use('/api/stores', storeRoutes);        // M1
+app.use('/api/products', productRoutes);    // M4
+app.use('/api/dashboard', dashboardRoutes); // M4
+app.use('/api/orders', orderRoutes);        // M5
+app.use('/api/payments', paymentRoutes);    // M5
 
 app.use(errorHandler);
 export default app;

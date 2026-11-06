@@ -1,5 +1,5 @@
 // Owner: M5
-const { z } = require('zod');
+import { z } from 'zod';
 
 const objectId = z.string().regex(/^[a-f\d]{24}$/i, 'Invalid id');
 
@@ -47,4 +47,4 @@ function parse(schema, input) {
   return result.data;
 }
 
-module.exports = { cartSchema, createOrderSchema, updateStatusSchema, parse };
+export { cartSchema, createOrderSchema, updateStatusSchema, parse };

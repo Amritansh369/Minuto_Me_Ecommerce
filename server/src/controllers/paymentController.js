@@ -1,10 +1,10 @@
 // Owner: M5
 // No payment gateway is wired up yet. Until one is (Razorpay/Stripe, with server-side
 // signature verification), online payments can only be simulated outside production.
-const crypto = require('crypto');
-const mongoose = require('mongoose');
-const Order = require('../models/Order');
-const { httpError } = require('./cartController');
+import crypto from 'crypto';
+import mongoose from 'mongoose';
+import Order from '../models/Order.js';
+import { httpError } from './cartController.js';
 
 // POST /api/payments/:orderId/simulate  { email }
 const simulatePayment = async (req, res, next) => {
@@ -41,4 +41,4 @@ const simulatePayment = async (req, res, next) => {
   }
 };
 
-module.exports = { simulatePayment };
+export { simulatePayment };

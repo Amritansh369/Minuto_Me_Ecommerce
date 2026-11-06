@@ -1,9 +1,9 @@
 // Owner: M5
-const express = require('express');
-const { simulatePayment } = require('../controllers/paymentController');
+import express from 'express';
+import { simulatePayment } from '../controllers/paymentController.js';
 
 const router = express.Router();
 
 router.post('/:orderId/simulate', simulatePayment);
 
-module.exports = router;
+export default router;

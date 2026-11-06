@@ -1,9 +1,9 @@
 // Owner: M5
 // The cart itself lives in the browser; the server re-prices it from the DB.
-const Product = require('../models/Product');
-const Store = require('../models/Store');
-const calcTotals = require('../utils/calcTotals');
-const { cartSchema, parse } = require('../validators/orderValidator');
+import Product from '../models/Product.js';
+import Store from '../models/Store.js';
+import calcTotals from '../utils/calcTotals.js';
+import { cartSchema, parse } from '../validators/orderValidator.js';
 
 const httpError = (status, message) => Object.assign(new Error(message), { status });
 
@@ -67,4 +67,4 @@ const quoteCart = async (req, res, next) => {
   }
 };
 
-module.exports = { quoteCart, priceCart, findActiveStore, storeSummary, httpError };
+export { quoteCart, priceCart, findActiveStore, storeSummary, httpError };
