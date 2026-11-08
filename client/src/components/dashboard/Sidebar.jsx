@@ -1,8 +1,17 @@
 // Owner: M4
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
-export default function Sidebar({ store, isOpen, onClose }) {
+export default function Sidebar({ store, isOpen: openProp, onClose: closeProp }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  // On small screens the sidebar is an off-canvas drawer; it manages its own state unless the page controls it
+  const [selfOpen, setSelfOpen] = useState(false);
+  const isOpen = openProp ?? selfOpen;
+  const onClose = closeProp ?? (() => setSelfOpen(false));
+  useEffect(() => { setSelfOpen(false); }, [location.pathname]);
   const navItems = [
     {
       label: 'Overview',
@@ -50,6 +59,11 @@ export default function Sidebar({ store, isOpen, onClose }) {
 
   return (
     <>
+      {openProp === undefined && (
+        <button type="button" className="dash-burger" aria-label="Open menu" onClick={() => setSelfOpen(true)}>
+          <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+        </button>
+      )}
       {/* Mobile backdrop */}
       {isOpen && (
         <div
@@ -65,9 +79,11 @@ export default function Sidebar({ store, isOpen, onClose }) {
       )}
 
       <aside
+        className="dash-sidebar"
+        data-open={isOpen ? 'true' : 'false'}
         style={{
           width: '260px',
-          backgroundColor: '#0f172a',
+          backgroundColor: '#0b0a1f',
           color: '#f8fafc',
           display: 'flex',
           flexDirection: 'column',
@@ -96,7 +112,7 @@ export default function Sidebar({ store, isOpen, onClose }) {
                 width: '40px',
                 height: '40px',
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #6366f1 0%, #3b82f6 100%)',
+                background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -184,7 +200,8 @@ export default function Sidebar({ store, isOpen, onClose }) {
                 fontSize: '14px',
                 fontWeight: 500,
                 color: isActive ? '#fff' : '#94a3b8',
-                backgroundColor: isActive ? '#3b82f6' : 'transparent',
+                background: isActive ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)' : 'transparent',
+                boxShadow: isActive ? '0 8px 18px -10px rgba(168, 85, 247, 0.9)' : 'none',
                 transition: 'all 0.15s ease',
               })}
             >
@@ -224,9 +241,27 @@ export default function Sidebar({ store, isOpen, onClose }) {
             </Link>
           ) : (
             <div style={{ fontSize: '12px', color: '#64748b', textAlign: 'center' }}>
-              ShopSphere Admin
+              Minuto Me
             </div>
           )}
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            <Link
+              to="/"
+              style={{ flex: 1, textAlign: 'center', padding: '9px', borderRadius: '8px', color: '#94a3b8', textDecoration: 'none', fontSize: '13px', fontWeight: 600, border: '1px solid #1e293b' }}
+            >
+              Home
+            </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                await logout();
+                navigate('/login');
+              }}
+              style={{ flex: 1, padding: '9px', borderRadius: '8px', color: '#fca5a5', background: 'transparent', fontSize: '13px', fontWeight: 600, border: '1px solid #1e293b', cursor: 'pointer' }}
+            >
+              Log out
+            </button>
+          </div>
         </div>
       </aside>
     </>

@@ -84,7 +84,7 @@ export default function OrderStatus() {
     <div style={page}>
       <Link to={`/store/${slug}/orders`}>← My orders</Link>
       <h1 style={{ marginBottom: 4 }}>Order #{order._id.slice(-8).toUpperCase()}</h1>
-      <p style={{ color: '#6b7280', marginTop: 0 }}>
+      <p style={{ color: 'var(--s-muted, #6b7280)', marginTop: 0 }}>
         Placed {new Date(order.createdAt).toLocaleString()} at {store.name}
       </p>
 
@@ -135,7 +135,7 @@ export default function OrderStatus() {
             <div>
               {a.city}, {a.state} {a.postalCode}, {a.country}
             </div>
-            <div style={{ color: '#6b7280', marginTop: 8 }}>
+            <div style={{ color: 'var(--s-muted, #6b7280)', marginTop: 8 }}>
               {order.customerInfo.phone} · {order.customerInfo.email}
             </div>
           </section>

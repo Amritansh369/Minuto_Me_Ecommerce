@@ -1,108 +1,76 @@
-// Owner: M4
-import React, { useEffect, useState } from 'react';
+// Owner: M4 -- Store Studio in the dashboard: edit theme/branding/sections with a live 3D preview of the real store
+import { useEffect, useState } from 'react';
 import Sidebar from '../../components/dashboard/Sidebar';
 import BrandingEditor from '../../components/dashboard/BrandingEditor';
 import { fetchStoreSettings, updateStoreSettings } from '../../api/productApi';
+import { fetchStorefront } from '../../api/storefrontApi';
+import { SAMPLE_PRODUCTS } from '../../demo/seedData';
+import './storeSettings.css';
 
 export default function StoreSettings() {
   const [store, setStore] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [subs, setSubs] = useState(0);
+  const [sample, setSample] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  const loadStore = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await fetchStoreSettings();
-      if (res?.store) {
-        setStore(res.store);
-      }
-    } catch (err) {
-      console.error('Error fetching store settings:', err);
-      setError('Unable to load store settings');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    loadStore();
+    let live = true;
+    (async () => {
+      try {
+        const res = await fetchStoreSettings();
+        if (!live || !res?.store) return;
+        setStore(res.store);
+        setSubs(res.subscriberCount || 0);
+        // the preview uses the store's real, active products (sample ones until the owner adds some)
+        const pub = await fetchStorefront(res.store.slug).catch(() => null);
+        if (!live) return;
+        setSample(!pub?.products?.length);
+        setProducts(pub?.products?.length ? pub.products : SAMPLE_PRODUCTS.filter((p) => p.isActive));
+      } catch {
+        if (live) setError('Unable to load store settings');
+      } finally {
+        if (live) setLoading(false);
+      }
+    })();
+    return () => { live = false; };
   }, []);
 
-  const handleSave = async (formData) => {
+  const handleSave = async (data) => {
+    setSaving(true);
     try {
-      setSaving(true);
-      const res = await updateStoreSettings(formData);
-      if (res?.store) {
-        setStore(res.store);
-      }
+      const res = await updateStoreSettings(data);
+      if (res?.store) setStore(res.store);
+      return { ok: true };
     } catch (err) {
-      console.error('Error updating store:', err);
-      alert('Failed to update store settings');
+      return { ok: false, message: err?.response?.data?.message || 'Failed to update store settings' };
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f8fafc' }}>
+    <div className="ss-wrap">
       <Sidebar store={store} />
-
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        {/* Header */}
-        <header
-          style={{
-            backgroundColor: '#ffffff',
-            borderBottom: '1px solid #e2e8f0',
-            padding: '16px 32px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'sticky',
-            top: 0,
-            zIndex: 30,
-          }}
-        >
+      <main className="ss-main">
+        <header className="ss-head">
           <div>
-            <h1 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-              Store Branding & Settings
-            </h1>
-            <div style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
-              Customize your store identity, brand palette, banners, and feature options.
-            </div>
+            <h1>Store Studio</h1>
+            <p>Theme, colors, fonts, layout and sections, with a live 3D preview of your real store.</p>
           </div>
+          {sample && <span className="ss-note">Preview uses sample products until you add your own</span>}
         </header>
-
-        {/* Content */}
-        <div style={{ padding: '32px', flex: 1 }}>
-          {error && (
-            <div
-              style={{
-                padding: '14px 18px',
-                borderRadius: '8px',
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
-                color: '#b91c1c',
-                fontSize: '14px',
-                marginBottom: '24px',
-              }}
-            >
-              {error}
-            </div>
-          )}
-
+        <div className="ss-body">
+          {error && <div className="error-box">{error}</div>}
           {loading ? (
             <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
-              <div style={{ display: 'inline-block', width: '32px', height: '32px', border: '3px solid #cbd5e1', borderTopColor: '#2563eb', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-              <div style={{ marginTop: '12px' }}>Loading store settings...</div>
+              <div className="spinner" style={{ margin: '0 auto' }} />
+              <div style={{ marginTop: 12 }}>Loading your studio…</div>
             </div>
           ) : (
-            <BrandingEditor
-              store={store}
-              onSave={handleSave}
-              isSaving={saving}
-            />
+            store && <BrandingEditor store={store} products={products} onSave={handleSave} isSaving={saving} subscriberCount={subs} />
           )}
         </div>
       </main>

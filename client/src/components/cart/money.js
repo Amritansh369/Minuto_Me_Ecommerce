@@ -16,18 +16,19 @@ export const statusColors = {
 };
 
 export const card = {
-  background: '#fff',
-  border: '1px solid #e5e7eb',
-  borderRadius: 12,
+  background: 'var(--s-surface, #fff)',
+  color: 'var(--s-text, #111827)',
+  border: '1px solid var(--s-line, #e5e7eb)',
+  borderRadius: 'var(--s-radius, 12px)',
   padding: 20,
 };
 
 export const button = (disabled) => ({
   padding: '12px 20px',
-  borderRadius: 8,
+  borderRadius: 'var(--s-radius-btn, 8px)',
   border: 'none',
-  background: disabled ? '#9ca3af' : '#111827',
-  color: '#fff',
+  background: disabled ? '#9ca3af' : 'var(--s-primary, #111827)',
+  color: disabled ? '#fff' : 'var(--s-on-primary, #fff)',
   fontWeight: 600,
   cursor: disabled ? 'not-allowed' : 'pointer',
 });

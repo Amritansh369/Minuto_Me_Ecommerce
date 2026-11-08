@@ -53,7 +53,7 @@ export default function OrderHistory() {
       <Link to={`/store/${slug}`}>← Back to store</Link>
       <h1>My orders</h1>
       {isGuest && (
-        <p style={{ color: '#6b7280' }}>
+        <p style={{ color: 'var(--s-muted, #6b7280)' }}>
           Showing orders placed on this device. <Link to="/login">Log in</Link> to see all your orders.
         </p>
       )}

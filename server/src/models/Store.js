@@ -36,6 +36,50 @@ const storeSchema = new mongoose.Schema(
       coupons: { type: Boolean, default: false },
     },
 
+    // Storefront design (M2 studio). Values are sanitized in validators/storeValidator.js
+    template: { type: String, default: 'modern', maxlength: 30 },
+    theme: {
+      preset: { type: String, default: 'aurora' },
+      mode: { type: String, default: 'light' }, // light | tinted | dark
+      font: { type: String, default: 'jakarta' },
+      radius: { type: String, default: 'soft' },
+      buttonStyle: { type: String, default: 'solid' },
+      cardStyle: { type: String, default: 'clean' },
+      heroLayout: { type: String, default: 'image' },
+      heroHeight: { type: String, default: 'standard' },
+      navStyle: { type: String, default: 'left' },
+      imageRatio: { type: String, default: 'square' },
+      animation: { type: String, default: 'subtle' },
+      pattern: { type: String, default: 'none' },
+      gridColumns: { type: Number, default: 4, min: 2, max: 5 },
+      mobileColumns: { type: Number, default: 2, min: 1, max: 2 },
+      showAnnouncement: { type: Boolean, default: false },
+      stickyNav: { type: Boolean, default: true },
+      sections: [{ _id: false, key: String, on: Boolean }],
+      content: {
+        heroTitle: String,
+        heroSubtitle: String,
+        ctaText: String,
+        announcement: String,
+        marquee: String,
+        promoTitle: String,
+        promoText: String,
+        aboutTitle: String,
+        aboutText: String,
+        newsletterTitle: String,
+        testimonials: [{ _id: false, name: String, text: String, rating: Number }],
+      },
+    },
+    social: {
+      instagram: { type: String, default: '' },
+      facebook: { type: String, default: '' },
+      twitter: { type: String, default: '' },
+      youtube: { type: String, default: '' },
+      whatsapp: { type: String, default: '' },
+    },
+    // Newsletter sign-ups from the storefront (never sent to the public storefront API)
+    subscribers: { type: [{ _id: false, email: String, createdAt: { type: Date, default: Date.now } }], select: false },
+
     status: { type: String, enum: ['draft', 'active', 'suspended'], default: 'active' },
   },
   { timestamps: true }

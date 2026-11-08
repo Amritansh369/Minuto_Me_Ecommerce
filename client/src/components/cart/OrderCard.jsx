@@ -9,7 +9,7 @@ export default function OrderCard({ order, currency, to }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
         <div>
           <div style={{ fontWeight: 600 }}>Order #{order._id.slice(-8).toUpperCase()}</div>
-          <div style={{ color: '#6b7280', fontSize: 14, marginTop: 4 }}>
+          <div style={{ color: 'var(--s-muted, #6b7280)', fontSize: 14, marginTop: 4 }}>
             {new Date(order.createdAt).toLocaleDateString()} · {itemCount} item{itemCount === 1 ? '' : 's'}
           </div>
         </div>

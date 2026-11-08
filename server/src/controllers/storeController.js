@@ -1,8 +1,10 @@
 // Owner: M1
 import Store from '../models/Store.js';
 import User from '../models/User.js';
+import { sanitizeSocial, sanitizeTheme } from '../validators/storeValidator.js';
 
-const writableFields = ['businessName', 'category', 'description', 'slug', 'currency'];
+const writableFields = ['businessName', 'category', 'description', 'slug', 'currency', 'template'];
+const capTemplate = (u) => { if (typeof u.template === 'string') u.template = u.template.trim().slice(0, 30); return u; };
 const nestedFields = {
   branding: ['logo', 'primaryColor', 'secondaryColor', 'accentColor', 'banners'],
   contact: ['email', 'phone', 'address'],
@@ -22,6 +24,21 @@ function pickStoreFields(input, includeSlug = true) {
       if (Object.prototype.hasOwnProperty.call(input[group], field)) update[`${group}.${field}`] = input[group][field];
     }
   }
+  Object.assign(update, designUpdate(input));
+  return capTemplate(update);
+}
+
+// theme/social as dotted $set paths so a partial update never wipes sibling settings
+export function designUpdate(input) {
+  const update = {};
+  const theme = sanitizeTheme(input.theme);
+  if (theme) {
+    const { content, ...rest } = theme;
+    for (const [k, v] of Object.entries(rest)) update[`theme.${k}`] = v;
+    if (content) for (const [k, v] of Object.entries(content)) update[`theme.content.${k}`] = v;
+  }
+  const social = sanitizeSocial(input.social);
+  if (social) for (const [k, v] of Object.entries(social)) update[`social.${k}`] = v;
   return update;
 }
 

@@ -3,7 +3,7 @@ import { formatMoney } from './money';
 
 export default function CartItem({ item, currency, issue, onQuantityChange, onRemove }) {
   return (
-    <div style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid #f3f4f6' }}>
+    <div style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--s-line, #f3f4f6)' }}>
       <div
         style={{
           width: 80,
@@ -15,7 +15,7 @@ export default function CartItem({ item, currency, issue, onQuantityChange, onRe
       />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 600 }}>{item.name}</div>
-        <div style={{ color: '#6b7280', fontSize: 14, marginTop: 4 }}>{formatMoney(item.price, currency)} each</div>
+        <div style={{ color: 'var(--s-muted, #6b7280)', fontSize: 14, marginTop: 4 }}>{formatMoney(item.price, currency)} each</div>
         {issue && <div style={{ color: '#dc2626', fontSize: 13, marginTop: 6 }}>{issue.message}</div>}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10 }}>
           <button
@@ -55,6 +55,6 @@ const qtyButton = {
   height: 32,
   borderRadius: 6,
   border: '1px solid #d1d5db',
-  background: '#fff',
+  background: 'var(--s-surface, #fff)',
   cursor: 'pointer',
 };

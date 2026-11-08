@@ -1,6 +1,7 @@
 // Owner: M4
 import Product from '../models/Product.js';
 import Store from '../models/Store.js';
+import { designUpdate } from './storeController.js';
 import Order from '../models/Order.js';
 
 // The logged-in owner's store -- never trust a store id sent by the client
@@ -87,7 +88,11 @@ export const getStoreDetails = async (req, res, next) => {
       return res.status(404).json({ message: 'Store not found' });
     }
 
-    res.json({ success: true, store });
+    const [agg] = await Store.aggregate([
+      { $match: { _id: store._id } },
+      { $project: { n: { $size: { $ifNull: ['$subscribers', []] } } } },
+    ]);
+    res.json({ success: true, store, subscriberCount: agg?.n || 0 });
   } catch (err) {
     next(err);
   }
@@ -138,6 +143,9 @@ export const updateStoreDetails = async (req, res, next) => {
         ...features,
       };
     }
+
+    if (typeof req.body.template === 'string') store.template = req.body.template.trim().slice(0, 30);
+    for (const [path, value] of Object.entries(designUpdate(req.body))) store.set(path, value);
 
     await store.save();
 

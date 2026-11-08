@@ -1,2 +1,9 @@
 // Owner: M1
-// TODO: implement
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+
+export default function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used inside <AuthProvider>');
+  return ctx;
+}
